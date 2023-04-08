@@ -101,7 +101,7 @@ public class Elevator extends Thread {
 
     public void await() {
         try {
-            stautsLock.lock();
+            stautsLock.lock();  
             notask.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -295,7 +295,7 @@ public class Elevator extends Thread {
             while (iterator.hasNext()) {
                 Person per = iterator.next();
                 if (per.getCurFloor() == curFloor.get()) {
-                    bitUp |= (1 << curFloor.get());
+                    tempbit |= (1 << curFloor.get());
                     break;
                 }
             }
