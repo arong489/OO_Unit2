@@ -33,7 +33,6 @@ public class Scheduler extends Thread {
         elevators.forEach(elevator -> {
             elevator.start();
         });
-        updateMap();
         while (!table.isEmpty() || !table.isNomore()) {
             Request request = table.getRequest();
             while (request != null) {

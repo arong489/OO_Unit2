@@ -68,6 +68,7 @@ public class Elevator extends Thread {
             while (noTask && !scheduler.isEnd() && !ifmaintain) {
                 await();
                 noTask = (onElevator.size() == 0 && waitUp.size() == 0 && waitDown.size() == 0);
+                System.err.println("Elevator:" + id + " signal");
             }
             if (scheduler.isEnd() && noTask) {
                 break;
@@ -103,7 +104,7 @@ public class Elevator extends Thread {
     public void await() {
         try {
             stautsLock.lock();
-            System.err.println("Elevator " + id + " start to sleep");
+            System.err.println("Elevator " + id + " await");
             notask.await();
         } catch (InterruptedException e) {
             e.printStackTrace();

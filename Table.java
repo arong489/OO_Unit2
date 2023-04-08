@@ -58,10 +58,11 @@ public class Table {
         Person person = null;
         getPersonLock.lock();
         try {
-            while (people.isEmpty() && requests.isEmpty() && !nomore.get()) {
+            while (people.isEmpty() && requests.isEmpty() && !isNomore()) {
                 sleepcasue = 1;
-                System.err.println("Scheduler start to sleep");
+                System.err.println("Scheduler await");
                 emptyPerson.await();
+                System.err.println("Scheduler signal");
             }
             sleepcasue = 0;
             if (!people.isEmpty()) {
@@ -80,10 +81,11 @@ public class Table {
         Request request = null;
         requestLock.lock();
         try {
-            while (people.isEmpty() && requests.isEmpty() && !nomore.get()) {
+            while (people.isEmpty() && requests.isEmpty() && !isNomore()) {
                 sleepcasue = 2;
-                System.err.println("Scheduler start to sleep");
+                System.err.println("Scheduler await");
                 emptyRequest.await();
+                System.err.println("Scheduler signal");
             }
             sleepcasue = 0;
             if (!requests.isEmpty()) {
@@ -113,9 +115,6 @@ public class Table {
             } finally {
                 requestLock.unlock();
             }
-        }
-        if (sleepcasue != 0) {
-            System.err.println("try to weak scheduler");
         }
     }
 
