@@ -60,9 +60,7 @@ public class Table {
         try {
             while (people.isEmpty() && requests.isEmpty() && !isNomore()) {
                 sleepcasue = 1;
-                System.err.println("Scheduler await");
                 emptyPerson.await();
-                System.err.println("Scheduler signal");
             }
             sleepcasue = 0;
             if (!people.isEmpty()) {
@@ -83,9 +81,7 @@ public class Table {
         try {
             while (people.isEmpty() && requests.isEmpty() && !isNomore()) {
                 sleepcasue = 2;
-                System.err.println("Scheduler await");
                 emptyRequest.await();
-                System.err.println("Scheduler signal");
             }
             sleepcasue = 0;
             if (!requests.isEmpty()) {

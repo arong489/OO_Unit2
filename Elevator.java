@@ -68,7 +68,6 @@ public class Elevator extends Thread {
             while (noTask && !scheduler.isEnd() && !ifmaintain) {
                 await();
                 noTask = (onElevator.size() == 0 && waitUp.size() == 0 && waitDown.size() == 0);
-                System.err.println("Elevator:" + id + " signal");
             }
             if (scheduler.isEnd() && noTask) {
                 break;
@@ -98,13 +97,11 @@ public class Elevator extends Thread {
             noTask = (onElevator.size() == 0 && waitUp.size() == 0 && waitDown.size() == 0);
         }
         ifmaintain = true;
-        System.err.println("Elevator:" + id + " died");
     }
 
     public void await() {
         try {
             stautsLock.lock();
-            System.err.println("Elevator " + id + " await");
             notask.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -135,7 +132,6 @@ public class Elevator extends Thread {
         } finally {
             notask.signal();
             stautsLock.unlock();
-            System.err.println("[Elevator " + id + " add task] Person " + person.getId());
         }
     }
 
@@ -210,10 +206,23 @@ public class Elevator extends Thread {
             return (available & (bitDown | bitUp) & (1 << curFloor.get())) != 0;
         } else {
             if (curDire == 1) {
-                return (available & bitUp & (1 << curFloor.get())) != 0;
+                int highcall = (destination | bitDown | bitUp) >> (curFloor.get() + 1);
+                if ((available & bitUp & (1 << curFloor.get())) != 0) {
+                    return true;
+                } else if (highcall == 0 && (available & bitDown & (1 << curFloor.get())) != 0) {
+                    curDire = 2;
+                    return true;
+                }
             } else {
-                return (available & bitDown & (1 << curFloor.get())) != 0;
+                int lowcall = (destination | bitDown | bitUp) & ((1 << curFloor.get()) - 1);
+                if ((available & bitDown & (1 << curFloor.get())) != 0) {
+                    return true;
+                } else if (lowcall == 0 && (available & bitUp & (1 << curFloor.get())) != 0) {
+                    curDire = 1;
+                    return true;
+                }
             }
+            return false;
         }
     }
 

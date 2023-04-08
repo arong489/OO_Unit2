@@ -28,7 +28,6 @@ public class RequestRecord extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.err.println("!!!recorder died");
         table.awakeGetter();
     }
 }

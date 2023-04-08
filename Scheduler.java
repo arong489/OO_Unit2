@@ -42,7 +42,6 @@ public class Scheduler extends Thread {
             Person person = table.getPerson();
             handle(person);
         }
-        System.err.println("!!!scheduler died");
         end = true;
         elevators.forEach(elevator -> {
             elevator.awake();
@@ -62,7 +61,6 @@ public class Scheduler extends Thread {
             ElevatorRequest elevatorRequest = (ElevatorRequest) request;
             Elevator elevator = new Elevator(elevatorRequest, this, onlyLetIn, onServe, table);
             elevators.add(elevator);
-            System.err.println("Add elevator " + elevatorRequest.getElevatorId());
             elevator.start();
         } else {
             MaintainRequest maintainRequest = (MaintainRequest) request;
