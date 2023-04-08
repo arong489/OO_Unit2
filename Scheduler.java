@@ -36,7 +36,10 @@ public class Scheduler extends Thread {
         updateMap();
         while (!table.isEmpty() || !table.isNomore()) {
             Request request = table.getRequest();
-            handle(request);
+            while (request != null) {
+                handle(request);
+                request = table.getRequest();
+            }
             Person person = table.getPerson();
             handle(person);
         }
@@ -55,7 +58,6 @@ public class Scheduler extends Thread {
         if (request == null) {
             return;
         }
-        mapVersion++;
         refreshmap = true;
         if (request instanceof ElevatorRequest) {
             ElevatorRequest elevatorRequest = (ElevatorRequest) request;
@@ -94,8 +96,6 @@ public class Scheduler extends Thread {
                 int distance = elevator.getCurFloor() - person.getCurFloor();
                 tempCost = (elevator.getCurNum() / elevator.getMaxMem()) * elevator.getMoveCost()
                     + (distance < 0 ? -distance : distance);
-                System.err.println("[Compare] E." + elevator.getElevatorId() +
-                    " taskNum:" + elevator.getCurNum() + " quote " + tempCost);
                 if (tempCost < minCost) {
                     minCost = tempCost;
                     minPlace = i;
@@ -158,6 +158,8 @@ public class Scheduler extends Thread {
         if (!refreshmap) {
             return;
         }
+        refreshmap = false;
+        mapVersion++;
         for (int i = 0; i < 11; i++) {
             access[i] = 0;
         }

@@ -40,7 +40,6 @@ public class Table {
             } finally {
                 requestLock.unlock();
             }
-            // System.err.println("Recorder add a request to table\n\t\t" + request);
             awakeGetter();
         }
     }
@@ -52,7 +51,6 @@ public class Table {
         } finally {
             addPersonLock.unlock();
         }
-        // System.err.println("Recorder add a person to table\n\t\t" + person);
         awakeGetter();
     }
 
@@ -69,7 +67,6 @@ public class Table {
             if (!people.isEmpty()) {
                 person = people.get(0);
                 people.remove(0);
-                // System.err.println("Scheduler get a person from table\n\t\t" + person);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -92,7 +89,6 @@ public class Table {
             if (!requests.isEmpty()) {
                 request = requests.get(0);
                 requests.remove(0);
-                // System.err.println("Scheduler get a request from the table\n\t\t" + request);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
