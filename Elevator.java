@@ -240,7 +240,6 @@ public class Elevator extends Thread {
             if (this.lasttime + openCost + closeCost > curTime) {
                 sleep(this.lasttime + openCost + closeCost - curTime);
             }
-            this.lasttime = System.currentTimeMillis();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -250,6 +249,7 @@ public class Elevator extends Thread {
             }
         }
         TimableOutput.println(String.format("CLOSE-%d-%d", curFloor.get() + 1, id));
+        this.lasttime = System.currentTimeMillis();
     }
 
     private void letIn() {
