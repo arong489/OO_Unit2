@@ -69,7 +69,7 @@ public class Elevator extends Thread {
                 await();
                 noTask = (onElevator.size() == 0 && waitUp.size() == 0 && waitDown.size() == 0);
             }
-            if (scheduler.isEnd() && noTask) {
+            if (scheduler.isEnd() && noTask && !ifmaintain) {
                 break;
             }
             if (ifmaintain) {
