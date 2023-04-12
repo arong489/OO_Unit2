@@ -64,7 +64,7 @@ public class Elevator extends Thread {
     @Override
     public void run() {
         boolean noTask = (onElevator.size() == 0 && waitUp.size() == 0 && waitDown.size() == 0);
-        while ((!scheduler.isEnd() || !noTask)) {
+        while ((!scheduler.isEnd() || !noTask) || ifmaintain) {
             while (noTask && !scheduler.isEnd() && !ifmaintain) {
                 await();
                 noTask = (onElevator.size() == 0 && waitUp.size() == 0 && waitDown.size() == 0);
@@ -249,6 +249,7 @@ public class Elevator extends Thread {
             if (this.lasttime + openCost + closeCost > curTime) {
                 sleep(this.lasttime + openCost + closeCost - curTime);
             }
+            TimableOutput.println(String.format("CLOSE-%d-%d", curFloor.get() + 1, id));
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -257,7 +258,6 @@ public class Elevator extends Thread {
                 onlyLetIn.get(curFloor.get()).release();
             }
         }
-        TimableOutput.println(String.format("CLOSE-%d-%d", curFloor.get() + 1, id));
         this.lasttime = System.currentTimeMillis();
     }
 
