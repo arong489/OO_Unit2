@@ -1,0 +1,8 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "elevator-3.jar"
+    ],
+    "java.checkstyle.version": "8.18",
+    "java.dependency.packagePresentation": "hierarchical"
+}

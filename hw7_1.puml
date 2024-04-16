@@ -1,0 +1,124 @@
+@startuml hw7_1
+
++class Elevator extends Thread {
+    -int available
+    -int moveCost
+    -int openCost
+    -int closeCost
+    -int maxMem
+    -int id;
+    -long lasttime
+    -ReentrantLock stautsLock
+    -Condition notask
+    -boolean ifmaintain
+    -AtomicInteger curFloor
+    -int curDire
+    -AtomicInteger curNum
+    -final ArrayList<Semaphore> onlyLetIn;
+    -final ArrayList<Semaphore> onServe;
+    -final Scheduler scheduler;
+    -final ArrayList<Person> onElevator
+    -int destination;
+    -final ArrayList<Person> waitUp
+    -int bitUp;
+    -final ArrayList<Person> waitDown
+    -int bitDown;
+    -Table table;
+    +Elevator(int id, Scheduler scheduler, ArrayList<Semaphore> onlyLetIn, ...)
+    +Elevator(ElevatorRequest elevatorRequest, Scheduler scheduler, ...)
+    +void run()
+    +void await()
+    +void awake()
+    +void addTask(Person person)
+    +void setIfmaintian(boolean ifmaintain)
+    +int getCurFloor()
+    +int getCurNum()
+    +int getElevatorId()
+    +int getAvailable()
+    +int getMoveCost()
+    +int getMaxMem()
+    -void setDirection()
+    -boolean hasOut()
+    -boolean hasIn()
+    -void open(boolean onlyIn)
+    -void close(boolean onlyIn)
+    -void letIn()
+    -void letOut()
+    -void move()
+    -void maintain()
+}
++class Mainclass {
+    +static void main(String[] args)
+}
++class Person {
+    -int id;
+    -int curFloor;
+    -int destFloor;
+    -Stack<Integer> path
+    -int mapVersion
+    +Person(Request request)
+    +int getMapVersion()
+    +int getId()
+    +int getCurFloor()
+    +int getDestFloor()
+    +void setCurFloor(int curFloor)
+    +boolean upStair()
+    +int getTempDest()
+    +void setPath(Stack<Integer> path, int mapVersion)
+    +int hashCode()
+    +boolean equals(Object obj)
+    +String toString()
+}
++class RequestRecord extends Thread {
+    -final Table table;
+    +RequestRecord(Table table)
+    +void run()
+}
++class Scheduler extends Thread {
+    -Table table
+    +void add(Request request)
+    +void add(Person person)
+    +Person getPerson()
+    +Request getRequest()
+    +void awakeGetter()
+    +void personArrive()
+    +boolean isEmpty()
+    +boolean isNomore()
+    +void setNomore(boolean nomore)
+}
++class Table {
+    -final ArrayList<Person> people
+    -final ArrayList<Request> requests
+    -ReentrantReadWriteLock readWriteLock
+    -ReadLock addPersonLock
+    -WriteLock getPersonLock
+    -ReentrantLock requestLock
+    -Condition emptyPerson
+    -Condition emptyRequest
+    -byte sleepcasue
+    -AtomicInteger recorded
+    -AtomicBoolean nomore
+    +Table()
+    +void add(Request request)
+    +void add(Person person)
+    +Person getPerson()
+    +Request getRequest()
+    +void awakeGetter()
+    +void personArrive()
+    +boolean isEmpty()
+    +boolean isNomore()
+    +void setNomore(boolean nomore)
+}
+
+Mainclass::main --> Table : Instantiation
+Mainclass::main --> RequestRecord : Instantiation
+Mainclass::main --> Scheduler : Instantiation
+Scheduler --> Elevator : Instantiation\nadd\nremove
+Person --> Table : involve
+RequestRecord ..> Table::add
+Elevator::letOut ..> Table::add
+Table::get ..> Scheduler
+Scheduler ..> Elevator::addTask : give person
+Scheduler ..> Elevator::setIfmaintian : maintain
+
+@enduml

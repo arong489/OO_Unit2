@@ -1,0 +1,48 @@
+@startuml hw7_2
+
+
+participant Mainclass
+participant RequestRecord
+participant Person
+participant Table
+participant Scheduler
+participant Elevator
+participant Semaphore
+
+Mainclass -> Table : Instantiation
+Mainclass -> RequestRecord : Instantiation
+Mainclass -> Scheduler : Instantiation
+Scheduler -> Elevator : Instantiation
+RequestRecord -> Person : Instantiation
+Person --> Table : RequestRecord add person to\nawaken Scheduler\nrecord one person
+RequestRecord --> Table : add Elevator or Maintain Request\nwaken Scheduler
+Table --> Scheduler : get Request
+Scheduler --> Scheduler : handle Elevator or\nMaintain Request
+Scheduler --> Scheduler : handle Person Request
+alt empty table
+    Scheduler --> Scheduler : sleep
+end
+Scheduler --> Elevator : add person task\nawaken Elevator
+alt no task
+    Elevator --> Elevator : sleep
+end
+Elevator --> Elevator : set direction
+Elevator --> Elevator : move
+alt if hasOut or hasIn or Maintain
+    Elevator --> Semaphore : acquire
+    Elevator --> Elevator : open door
+    alt someone want to get out or maintain
+        Elevator --> Elevator :letOut
+        alt person arrive
+            Elevator --> Table : decrease one person
+        else don't arrive
+            Elevator --> Table : put person to table again
+        end
+    end
+    alt someone is able to get in
+        Elevator --> Elevator : letIn
+    end
+    Elevator --> Elevator : close the door
+    Elevator --> Semaphore : release
+end
+@enduml
