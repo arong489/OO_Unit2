@@ -4,5 +4,6 @@
         "elevator-3.jar"
     ],
     "java.checkstyle.version": "8.18",
-    "java.dependency.packagePresentation": "hierarchical"
+    "java.dependency.packagePresentation": "hierarchical",
+    "java.project.explorer.showNonJavaResources": true
 }
